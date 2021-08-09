@@ -108,6 +108,6 @@ def preprocessing_stu(dataframe):
 
     # standard scaling for each row (averaging students intends)
     scaler=StandardScaler()
-    df_scaled = pd.DataFrame(scaler.fit_transform(df_prepared.T).T, columns = df_prepared.columns)
+    df_scaled = pd.DataFrame(scaler.fit_transform(df_prepared.T).T, index=df_prepared.index, columns = df_prepared.columns)
 
     return df_scaled, df_target
