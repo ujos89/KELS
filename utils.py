@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
 
 from sklearn.preprocessing import StandardScaler
 
@@ -111,3 +112,19 @@ def preprocessing_stu(dataframe):
     df_scaled = pd.DataFrame(scaler.fit_transform(df_prepared.T).T, index=df_prepared.index, columns = df_prepared.columns)
 
     return df_scaled, df_target
+
+def plot_2d(df_input, df_label, label="L2Y1_E_CS"):
+    df = pd.merge(df_input, df_label[label], left_index=True, right_index=True, how='left')
+    df = df.rename(columns={0:'col1', 1:'col2'})
+    grouped = df.groupby(label)
+
+    plt.rcParams['figure.figsize'] = [10, 8]
+    fig, ax = plt.subplots()
+
+    for name, group in grouped:
+        ax.plot(group.col1, group.col2, marker='o', linestyle='', label=name, alpha=.3)
+
+    ax.legend(fontsize=12, loc='upper left') # legend position
+
+    plt.title('2d Scatter', fontsize=20)
+    plt.show()
