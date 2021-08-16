@@ -100,18 +100,18 @@ def preprocessing_stu(dataframe):
     # data preprocessing
     columns_prepared = list(df_prepared.columns)
 
-    # move value(has another sclae) to fit average
-    for col in columns_prepared:
-        if col in columns_0to9:
-            df_prepared[col] -= 1.5
-        elif col in columns_1to4:
-            df_prepared[col] += .5
+    # # move value(has another sclae) to fit average
+    # for col in columns_prepared:
+    #     if col in columns_0to9:
+    #         df_prepared[col] -= 1.5
+    #     elif col in columns_1to4:
+    #         df_prepared[col] += .5
 
     # standard scaling for each row (averaging students intends)
     scaler=StandardScaler()
     df_scaled = pd.DataFrame(scaler.fit_transform(df_prepared.T).T, index=df_prepared.index, columns = df_prepared.columns)
 
-    return df_scaled, df_target
+    return df_prepared, df_target
 
 def plot_2d(df_input, df_label, label="L2Y1_E_CS"):
     df = pd.merge(df_input, df_label[label], left_index=True, right_index=True, how='left')
