@@ -91,6 +91,6 @@ print("PCA with 2 components")
 # print(df_kpca2.head())
 print()
 
-# pca_visualization(df_pca2, df_label)
+pca_visualization(df_pca2, df_label)
 # pca_visualization_3d(df_pca3, df_label)
-pca_visualization(df_kpca2, df_label)
+# pca_visualization(df_kpca2, df_label)

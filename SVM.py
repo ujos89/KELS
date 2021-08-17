@@ -31,7 +31,6 @@ print("test size:", X_test.shape)
 SVM_poly = SVC(kernel = 'poly')
 SVM_poly.fit(X_train, y_train)
 y_pred = SVM_poly.predict(X_test)
-
 # get accuracy_score
 print("poly accuracy:", accuracy_score(y_pred, y_test)*100,"%")
 
@@ -39,7 +38,6 @@ print("poly accuracy:", accuracy_score(y_pred, y_test)*100,"%")
 SVM_rbf = SVC(kernel = 'rbf')
 SVM_rbf.fit(X_train, y_train)
 y_pred = SVM_rbf.predict(X_test)
-
 # get accuracy_score
 print("rbf accuracy:", accuracy_score(y_pred, y_test)*100,"%")
 
@@ -47,6 +45,5 @@ print("rbf accuracy:", accuracy_score(y_pred, y_test)*100,"%")
 SVM_linear = SVC(kernel = 'linear')
 SVM_linear.fit(X_train, y_train)
 y_pred = SVM_linear.predict(X_test)
-
 # get accuracy_score
 print("linear accuracy:", accuracy_score(y_pred, y_test)*100,"%")
