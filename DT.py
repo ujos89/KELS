@@ -3,8 +3,8 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 
-from utils import get_csvs, preprocessing_stu, count_arr
-from sklearn.svm import SVC
+from utils import get_csvs, preprocessing_stu, plot_2d
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
@@ -26,37 +26,18 @@ for train_idx, test_idx in sss.split(X, y):
 y_test = y_test.to_numpy()
 print("train size:", X_train.shape)
 print("test size:", X_test.shape)
-print("test distirbution:", count_arr(y_test))
 print()
 
-## SVM
-# support vector machine wiht poly kernel
-SVM_poly = SVC(kernel = 'poly')
-SVM_poly.fit(X_train, y_train)
-y_pred = SVM_poly.predict(X_test)
-# get accuracy_score
-print("poly accuracy:", accuracy_score(y_pred, y_test)*100,"%")
-print()
+# Decision tree
+dt = DecisionTreeClassifier()
+dt = dt.fit(X_train, y_train)
+y_pred = dt.predict(X_test)
 
-# support vector machine wiht rbf kernel
-SVM_rbf = SVC(kernel = 'rbf')
-SVM_rbf.fit(X_train, y_train)
-y_pred = SVM_rbf.predict(X_test)
-# get accuracy_score
-print("y_pred distribution", count_arr(y_pred))
-print("rbf accuracy:", accuracy_score(y_pred, y_test)*100,"%")
+# accuracy
+print("accuracy:", accuracy_score(y_pred, y_test)*100,"%")
 print()
 print("confusion matrix")
 print(confusion_matrix(y_test, y_pred))
 print()
 print("classificaion report")
 print(classification_report(y_test, y_pred))
-print()
-
-
-# support vector machine wiht linear kernel
-SVM_linear = SVC(kernel = 'linear')
-SVM_linear.fit(X_train, y_train)
-y_pred = SVM_linear.predict(X_test)
-# get accuracy_score
-print("linear accuracy:", accuracy_score(y_pred, y_test)*100,"%")

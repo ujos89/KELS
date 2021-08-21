@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+import collections
 
 from sklearn.preprocessing import StandardScaler
 
@@ -128,3 +129,10 @@ def plot_2d(df_input, df_label, label="L2Y1_E_CS"):
 
     plt.title('2d Scatter', fontsize=20)
     plt.show()
+
+def count_arr(np_arr):
+    label = sorted(set(np_arr))
+    count = []
+    for l in label:
+        count.append(collections.Counter(np_arr)[l])
+    return count
