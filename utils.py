@@ -101,14 +101,14 @@ def preprocessing_stu(dataframe):
     # # data preprocessing
     # columns_prepared = list(df_prepared.columns)
 
-    # # move value(has another sclae) to fit average
+    # move value(has another sclae) to fit average
     # for col in columns_prepared:
     #     if col in columns_0to9:
     #         df_prepared[col] -= 1.5
     #     elif col in columns_1to4:
     #         df_prepared[col] += .5
 
-    # # standard scaling for each row (averaging students intends)
+    # standard scaling for each row (averaging students intends)
     # scaler=StandardScaler()
     # df_prepared = pd.DataFrame(scaler.fit_transform(df_prepared.T).T, index=df_prepared.index, columns = df_prepared.columns)
 

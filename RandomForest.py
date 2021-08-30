@@ -4,7 +4,7 @@ import os
 import matplotlib.pyplot as plt
 
 from utils import get_csvs, preprocessing_stu, plot_2d
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
@@ -30,10 +30,10 @@ print("train size:", X_train.shape)
 print("test size:", X_test.shape)
 print()
 
-# softmax regression(Multinomial Logistic Regression)
-softmax_reg = LogisticRegression(multi_class="multinomial", solver="saga", penalty='l1', C=1, max_iter=10000, random_state=42)
-softmax_reg.fit(X_train, y_train)
-y_pred = softmax_reg.predict(X_test)
+# Random Forest Classifier
+random_forest = RandomForestClassifier(criterion='entropy', max_depth=32, bootstrap=True, random_state=42, n_estimators=256, min_samples_split=2)
+random_forest.fit(X_train, y_train)
+y_pred = random_forest.predict(X_test)
 
 # accuracy
 print("accuracy:", accuracy_score(y_pred, y_test)*100,"%")
