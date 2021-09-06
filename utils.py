@@ -61,6 +61,7 @@ def preprocessing_stu(dataframe):
     columns_0to9 =['L2Y1S28', 'L2Y1S2901', 'L2Y1S2902', 'L2Y1S31']
     columns_0or1 = ['L2Y1S22', 'L2Y1S23', 'L2Y1S24', 'L2Y1S25']
     columns_1to4 = ['L2Y1S1001', 'L2Y1S1002', 'L2Y1S1003']
+    columns_target = ['L2Y1_K_SCORE', 'L2Y1_E_SCORE', 'L2Y1_M_SCORE', 'L2Y1_K_CS', 'L2Y1_E_CS', 'L2Y1_M_CS', 'L2Y1_K_THETA', 'L2Y1_E_THETA','L2Y1_M_THETA']
     # lots of missing value in question about addicting on phone
     columns_phone = ['L2Y1S3001', 'L2Y1S3002', 'L2Y1S3003', 'L2Y1S3004', 'L2Y1S3005']
 
@@ -73,28 +74,55 @@ def preprocessing_stu(dataframe):
 
     columns_del.extend(columns_basicinfo)
     columns_del.extend(columns_categorical)
+    columns_del.extend(columns_0or1)
     columns_del.extend(columns_phone)
 
     # delete unnecessary columns
     df_drop = dataframe.drop(columns_del, axis=1)
-
     # delete null value
     df_drop = df_drop[df_drop != "#NULL!"]
-    # print(df_drop.shape)
-
-    # string to int (dataframe)
-    df_float = df_drop.astype(float)
     # L2SID float to int
-    df_float['L2SID'] = df_float['L2SID'].apply(np.int64)
+    df_drop = df_drop.astype(float)
+    df_drop['L2SID'] = df_drop['L2SID'].apply(np.int64)
+    df_drop = df_drop.set_index(['L2SID'])
+    # negative to zero
+    df_drop[df_drop < 0] = 0
 
+    ## merge 
+    # bulid itemized columns
+    columns_merge = set()
+    for col in list(df_drop.columns):
+        if col not in columns_target:
+            columns_merge.add(col[:7])
+    columns_merge = list(columns_merge)
+
+    columns_merge_dict = {key:0 for key in columns_merge}
+    df_merge = pd.DataFrame(df_drop[columns_target], index=df_drop.index)
+    
+    # add itemized columns to merge
+    for col in columns_merge_dict:
+        df_merge[col] = 0
+
+    # merge itemized columns
+    for col in list(df_drop.columns):
+        for col_itemized in columns_merge_dict:
+            if col.startswith(col_itemized):
+                columns_merge_dict[col_itemized] += 1
+                df_merge[col_itemized] += df_drop[col]
+
+    for col in columns_merge_dict:
+        df_merge[col] /= columns_merge_dict[col]
+
+    # drop nan (rows: 7324 -> 7186)
+    rows_with_nan = [index for index, row in df_merge.iterrows() if row.isnull().any()]
+    df_merge = df_merge.drop(rows_with_nan)
+    
     # drop nan and invalid value
-    df_prepared = df_float.dropna(axis=0) 
+    df_prepared = df_merge.dropna(axis=0) 
     df_prepared = df_prepared[df_prepared >= 0]
     df_prepared = df_prepared.dropna(axis=0) 
-    df_prepared = df_prepared.set_index(['L2SID'])
     
     # split dataframe to target or not 
-    columns_target = ['L2Y1_K_SCORE', 'L2Y1_E_SCORE', 'L2Y1_M_SCORE', 'L2Y1_K_CS', 'L2Y1_E_CS', 'L2Y1_M_CS', 'L2Y1_K_THETA', 'L2Y1_E_THETA','L2Y1_M_THETA']
     df_target = df_prepared[columns_target]
     df_prepared = df_prepared.drop(columns=columns_target)
 
