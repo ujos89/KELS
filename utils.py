@@ -52,95 +52,25 @@ def get_csvs():
 
     return csv_files
 
-def preprocessing_stu1(dataframe):
-    
-    columns = list(dataframe.columns)
-    columns_del = []
-    columns_basicinfo = ['L2GENDER', 'L2Y1_SCHID', 'L2Y1_REG', 'L2Y1_SCHSIZE', 'L2Y1_SCHTYPE', 'L2Y1S']
-    columns_categorical = ['L2Y1S35', 'L2Y1S34', 'L2Y1S33']
-    columns_0to9 =['L2Y1S28', 'L2Y1S2901', 'L2Y1S2902', 'L2Y1S31']
-    columns_0or1 = ['L2Y1S22', 'L2Y1S23', 'L2Y1S24', 'L2Y1S25']
-    columns_1to4 = ['L2Y1S1001', 'L2Y1S1002', 'L2Y1S1003']
-    columns_target = ['L2Y1_K_SCORE', 'L2Y1_E_SCORE', 'L2Y1_M_SCORE', 'L2Y1_K_CS', 'L2Y1_E_CS', 'L2Y1_M_CS', 'L2Y1_K_THETA', 'L2Y1_E_THETA','L2Y1_M_THETA']
-    # lots of missing value in question about addicting on phone
-    columns_phone = ['L2Y1S3001', 'L2Y1S3002', 'L2Y1S3003', 'L2Y1S3004', 'L2Y1S3005']
+def get_savs():
+    path_dataset = './dataset'
+    path_preprocessed = './preprocessed/raw'
+    kels2013 = sorted(os.listdir(path_dataset))
+    replaces = [["남학생", 1], ["여학생",2], ["특별시",1], ["대도시", 2], ["중소도시", 3], ["읍면지역",4], ["일반", 1], ["소규모", 2], ["국공립", 1], ["사립", 2], ["미참여", 0], ["참여", 1], ["기초미달", 1], ["기초", 2], ["보통", 3], ["우수", 4], ["ⓞ받은 적이 없다", 0], ["ⓞ 받은 적이 없다", 0], ["① 전혀 그렇지 않다", 1],["① 전혀 하지 않는다", 1], ["① 전혀 도움이 되지 않는다", 1], ["① 전혀 만족하지 않는다", 1], ["① 전혀 없다", 1], ["② 그렇지 않다", 2], ["② 만족하지 않는다", 2], ["② 별로 하지 않는다", 2], ["②", 2], ["② 거의 없다", 2], ["② 도움이 되지 않는 편이다", 2], ["② 만족하지 않는다", 2], ["③ 보통이다", 3], ["③", 3], ["③ 가끔 있다", 3], ["④ 그렇다", 4], ["④", 4], ["④ 자주 있다", 4], ["④ 도움이 되는 편이다", 4], ["④ 만족한다", 4], ["④ 가끔 하는 편이다", 4], ["⑤ 매우 그렇다", 5], ["⑤ 자주 하는 편이다", 5], ["⑤ 매우 많다", 5], ["⑤ 매우 도움이 된다", 5],  ["⑤ 매우 만족한다", 5],  ["전혀 그렇지 않다", 1], ["그렇지 않다", 2], ["보통이다", 3], ["그렇다", 4], ["매우 그렇다", 5], ["20% 이하", 1], ["21~40%", 2], ["21-40%", 2], ["41~60%", 3], ["41-60%", 3], ["61~80%", 4], ["61-80%", 4], ["81% 이상", 5], ["10분 이하", 1], ["11~20분", 2], ["11-20분", 2], ["21~30분", 3], ["21-30분", 3], ["31분 이상", 4], ["31-40분", 4], ["31~40분", 4], ["31분~40분", 4], ["41분 이상", 5], ["있다", 1], ["없다", 2], ["해당", 1], ["비해당", 2], ["전혀 없음", 0], ["전혀없음", 0], ["1시간", 1], ["2시간", 2], ["3시간", 3], ["4시간", 4], ["5시간", 5], ["6시간", 6], ["6시간 이상", 6], ["7시간", 7], ["8시간", 8], ["9시간 이상", 9], ["하지않음", 1], ["1시간 미만", 2], ["1시간 이상 2시간 미만", 3], ["1시간 이상-2시간 미만", 3], ["2시간 이상 3시간 미만", 4], ["2시간 이상-3시간 미만", 4], ["3시간 이상", 5], ["하지 않음", 1], ["전혀 하지 않는다", 1], ["별로 하지 않는다", 2], ["보통이다", 3], ["가끔 하는 편이다", 4], ["자주 하는 편이다", 5], ["전혀 없다", 1], ["거의 없다" , 2], ["가끔 있다", 3], ["자주 있다", 4], ["매우 많다", 5], ["예", 1], ["아니오", 2], ["받은 적이 없다", 0], ["전혀 도움이 되지 않는다", 1], ["도움이 되지 않는 편이다", 2], ["보통이다", 3], ["도움이 되는 편이다", 4], ["매우 도움이 된다", 5], ["전혀 만족하지 않는다", 1], ["만족하지 않는다" ,2], ["보통이다", 3], ["만족한다", 4], ["매우 만족한다", 5], ["찬성", 1], ["반대", 2], ["없음", 0], ["있음", 1], ["읽지 않음", 0], ["1권", 1], ["2권", 2], ["3권", 3], ["4권", 4], ["5권", 5], ["6권", 6], ["7권", 7], ["8권", 8], ["9권", 9], ["10권 이상", 10], ["전혀 하지 않는다", 0], ["연1회", 1], ["학기에 1-2회", 2], ["6개월에 1-2회", 2], ["3개월에 1-2회", 3], ["분기에 1-2회", 3], ["월 1-2회", 4], ["주 1-2회", 5], ["선행학습 안했음", 0], ["중학교 3학년", 1], ["고등학교 1학년", 2], ["고등학교 2학년", 3], ["고등학교 3학년", 4], ["전혀 안함", 0], ["30분 미만", 1], ["30분-1시간 미만", 2], ["1-2시간 미만", 3] ,["2-3시간 미만", 4], ["3-5시간 미만", 5], ["5-8시간 미만", 6], ["8시간 이상", 7], ["없음", 0], ["있음", 1], ["전혀 하지 않음", 0], ["받은 적이 없다", 0], ["(2개 수준)심화", 1], ["(2개 수준)보통(기본)", 2], ["(3개 수준)심화", 3], ["(3개 수준)보통(기본)", 4], ["(3개 수준)기초", 5], ["연 1회", 1], ["전혀 하지 않는다", 0], ["6개월에 1~2회", 2], ["3개월에 1~2회",3], ["월 1~2회", 4], ["주 1~2회", 5], ["전혀 하지 않음", 0], ["1시간 미만", 1], ["1시간 이상~2시간 미만", 2], ["2시간 이상~3시간 미만",3], ["3시간 이상", 4], ["30분 미만", 1], ["30분~1시간 미만", 2], ["1~2시간 미만", 3], ["2~3시간 미만", 4], ["3시간 이상", 5], ]
+    idx = 0
 
-    for col in columns:
-        if col.endswith('O'):
-            columns_del.append(col)
+    for folder in kels2013:
+        if folder.startswith('KELS2013'):
+            path_folder = os.path.join(path_dataset, folder)
+            kels2013_data = sorted(os.listdir(path_folder))
 
-        if col.startswith('L2Y1S24_'):
-            columns_del.append(col)
-
-    columns_del.extend(columns_basicinfo)
-    columns_del.extend(columns_categorical)
-    columns_del.extend(columns_0or1)
-    columns_del.extend(columns_phone)
-
-    # delete unnecessary columns
-    df_drop = dataframe.drop(columns_del, axis=1)
-    # delete null value
-    df_drop = df_drop[df_drop != "#NULL!"]
-    # L2SID float to int
-    df_drop = df_drop.astype(float)
-    df_drop['L2SID'] = df_drop['L2SID'].apply(np.int64)
-    df_drop = df_drop.set_index(['L2SID'])
-    # negative to zero
-    df_drop[df_drop < 0] = 0
-
-    ## merge 
-    # bulid itemized columns
-    columns_merge = set()
-    for col in list(df_drop.columns):
-        if col not in columns_target:
-            columns_merge.add(col[:7])
-    columns_merge = list(columns_merge)
-
-    columns_merge_dict = {key:0 for key in columns_merge}
-    df_merge = pd.DataFrame(df_drop[columns_target], index=df_drop.index)
-    
-    # add itemized columns to merge
-    for col in columns_merge_dict:
-        df_merge[col] = 0
-
-    # merge itemized columns
-    for col in list(df_drop.columns):
-        for col_itemized in columns_merge_dict:
-            if col.startswith(col_itemized):
-                columns_merge_dict[col_itemized] += 1
-                df_merge[col_itemized] += df_drop[col]
-
-    for col in columns_merge_dict:
-        df_merge[col] /= columns_merge_dict[col]
-
-    # drop nan (rows: 7324 -> 7186)
-    rows_with_nan = [index for index, row in df_merge.iterrows() if row.isnull().any()]
-    df_merge = df_merge.drop(rows_with_nan)
-    
-    # drop nan and invalid value
-    df_prepared = df_merge.dropna(axis=0) 
-    df_prepared = df_prepared[df_prepared >= 0]
-    df_prepared = df_prepared.dropna(axis=0) 
-    
-    # split dataframe to target or not 
-    df_target = df_prepared[columns_target]
-    df_prepared = df_prepared.drop(columns=columns_target)
-
-    # # data preprocessing
-    # columns_prepared = list(df_prepared.columns)
-
-    # move value(has another sclae) to fit average
-    # for col in columns_prepared:
-    #     if col in columns_0to9:
-    #         df_prepared[col] -= 1.5
-    #     elif col in columns_1to4:
-    #         df_prepared[col] += .5
-
-    # standard scaling for each row (averaging students intends)
-    # scaler=StandardScaler()
-    # df_prepared = pd.DataFrame(scaler.fit_transform(df_prepared.T).T, index=df_prepared.index, columns = df_prepared.columns)
-
-    return df_prepared, df_target
+            for sav_file in kels2013_data:
+                if (sav_file.endswith('.sav') or sav_file.endswith(".SAV")) and sav_file.startswith('1'):
+                    idx += 1
+                    df_sav = pd.read_spss(os.path.join(path_folder, sav_file))
+                    for replace in replaces:
+                        df_sav = df_sav.replace(replace[0], replace[1])
+                        df_sav.to_csv(path_preprocessed+'/L2Y'+str(idx)+'S_raw.csv')
 
 def plot_2d(df_input, df_label, label="L2Y1_E_CS"):
     df = pd.merge(df_input, df_label[label], left_index=True, right_index=True, how='left')
@@ -240,7 +170,7 @@ def preprocessing_stu(dataframe, year):
         columns_0to9 = ['L2Y3S33']
         columns_0to4 = ['L2Y3S34~']
         columns_0to7 = ['L2Y3S35~']
-        columns_categorical = ['L2Y3S37','L2Y3S39~', 'L2Y3S40']
+        columns_categorical = ['L2Y3S37','L2Y3S39~', 'L2Y3S40', 'L2Y3S38']
 
         for col in columns:
             if col.endswith('O'):
@@ -251,12 +181,12 @@ def preprocessing_stu(dataframe, year):
                 columns_del.append(col)
 
             # columns_categorical
-            if col.startswith('L2Y3S39') or col=='L2Y3S37' or col=='L2Y3S40':
+            if col.startswith('L2Y3S38') or col.startswith('L2Y3S39') or col=='L2Y3S37' or col=='L2Y3S40':
                 columns_del.append(col)
 
         columns_del.extend(columns_basicinfo)
         columns_del.extend(columns_1or2)
-        columns_del.extend(['L2Y3S45', 'l2y3s1', 'l2y3s0'])
+        columns_del.extend(['L2Y3S45'])
 
     elif year==4:
         columns_0or1 = ['L2Y4S26~','L2Y4S39~','L2Y4S40~']
@@ -278,12 +208,11 @@ def preprocessing_stu(dataframe, year):
                 columns_del.append(col)
 
             # columns 1or2
-            if col.startswith('L2Y4S25') or col=='L2Y4S21' or col=='L2Y4S27' or col=='L2Y4S46':
+            if col.startswith('L2Y4S25') or col.startswith('L2Y4S46') or col=='L2Y4S21' or col=='L2Y4S27' or col=='L2Y4S47':
                 columns_del.append(col)
 
         columns_del.extend(columns_basicinfo)
         columns_del.extend(columns_categorical)
-        columns_del.extend(['l2y4s0','l2y4s1'])
         # columns_del.extend(['L2Y4S47'])
 
     elif year==5:
@@ -314,6 +243,9 @@ def preprocessing_stu(dataframe, year):
             if col.startswith('L2Y5S25'):
                 columns_del.append(col)
 
+            if col.startswith('L2Y5S41'):
+                columns_del.append(col)
+
         columns_del.extend(columns_basicinfo)
         columns_del.extend(columns_categorical)
 
@@ -337,7 +269,10 @@ def preprocessing_stu(dataframe, year):
                 columns_del.append(col)
 
             # columns categorical
-            if col.startswith('L2Y6S39') or col.startswith('L2Y6S48') or col=='L2Y6S38' or col=='L2Y6S40' or col=='L2Y6S41' or col=='L2Y6S42' or col=='L2Y6S43':
+            if col.startswith('L2Y6S39') or col.startswith('L2Y6S48') or col=='L2Y6S38' or col=='L2Y6S40' or col=='L2Y6S42' or col=='L2Y6S43':
+                columns_del.append(col)
+
+            if col.startswith('L2Y6S38') or col.startswith('L2Y6S41') or col=='L2Y6S37':
                 columns_del.append(col)
 
         columns_del.extend(columns_basicinfo)
@@ -405,12 +340,22 @@ def preprocessing_stu(dataframe, year):
     df_merge = df_merge.drop(rows_with_nan)
     
     # split dataframe to target or not
-    if year==1 or year==3:
-        # # df_target = df_merge[columns_target]
+    if year != 6:
         df_target = pd.DataFrame(df_drop[columns_target], index=df_merge.index)
-    elif year==6:
-        df_target = pd.DataFrame(())
     else:
-        df_target = pd.DataFrame(())
+        df_target = pd.DataFrame([])
 
     return df_merge, df_target
+
+def preprocessing():
+    path_preprocessed = './preprocessed/raw'
+    file_names = sorted(os.listdir(path_preprocessed))
+
+    for file_name in file_names:
+        df_raw = pd.read_csv(os.path.join(path_preprocessed, file_name))
+        year = int(file_name[-10])
+        df_input, df_label = preprocessing_stu(df_raw, year)
+        input_title = 'L2Y'+str(year)+'S_input.csv'
+        label_title = 'L2Y'+str(year)+'S_label.csv'
+
+        print(df_input, df_label)
