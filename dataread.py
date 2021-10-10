@@ -7,4 +7,5 @@ from utils import *
 
 
 # get_savs()
-preprocessing()
+# preprocessing()
+get_sav_label6()

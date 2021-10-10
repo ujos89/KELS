@@ -72,6 +72,30 @@ def get_savs():
                         df_sav = df_sav.replace(replace[0], replace[1])
                         df_sav.to_csv(path_preprocessed+'/L2Y'+str(idx)+'S_raw.csv')
 
+def get_sav_label6():
+    file_ = './dataset/KELS2013_6차/4. L2Y6A_학생평가.sav'
+    df_sav = pd.read_spss(file_)
+    df_sav = df_sav.set_index(['L2SID'])
+    
+    replaces = [['① 1등급', 1], ['② 2등급', 2], ['③ 3등급', 3], ['④ 4등급', 4], ['⑤ 5등급', 5], ['⑥ 6등급', 6], ['⑦ 7등급', 7], ['⑧ 8등급', 8], ['⑨ 9등급', 9], ['응시함', 1], ['응시안함', 2], ['성적 확인불가', 3]]
+    columns_del = ['L2GENDER', 'L2Y6_SCHID', 'L2Y6_REG', 'L2Y6_SCHTYPE1', 'L2Y6_SCHTYPE2', 'L2Y6A'] 
+    df_sav = df_sav.drop(columns_del, axis=1)
+    for replace in replaces:
+        df_sav = df_sav.replace(replace[0], replace[1])
+
+    df_sav = df_sav.astype(float)
+    df_label = pd.DataFrame(index=df_sav.index)
+    df_label['L2Y6_K_CS'] = df_sav[['L2Y6A01_1_1', 'L2Y6A01_2_1', 'L2Y6A01_3_1']].mean(axis=1)
+    df_label['L2Y6_M_CS'] = df_sav[['L2Y6A01_1_2', 'L2Y6A01_2_2', 'L2Y6A01_3_2']].mean(axis=1)
+    df_label['L2Y6_E_CS'] = df_sav[['L2Y6A01_1_3', 'L2Y6A01_2_3', 'L2Y6A01_3_3']].mean(axis=1)
+    
+    df_drop = df_label.dropna()
+    df_drop.to_csv('./preprocessed/preprocessed/L2Y6S_label.csv')
+
+
+
+
+
 def plot_2d(df_input, df_label, label="L2Y1_E_CS"):
     df = pd.merge(df_input, df_label[label], left_index=True, right_index=True, how='left')
     df = df.rename(columns={0:'col1', 1:'col2'})
@@ -347,15 +371,20 @@ def preprocessing_stu(dataframe, year):
 
     return df_merge, df_target
 
+def preprocessing_label6():
+    pass
+
 def preprocessing():
-    path_preprocessed = './preprocessed/raw'
-    file_names = sorted(os.listdir(path_preprocessed))
+    path_raw = './preprocessed/raw'
+    path_preprocessed = './preprocessed/preprocessed'
+    file_names = sorted(os.listdir(path_raw))
 
     for file_name in file_names:
-        df_raw = pd.read_csv(os.path.join(path_preprocessed, file_name))
+        df_raw = pd.read_csv(os.path.join(path_raw, file_name))
         year = int(file_name[-10])
         df_input, df_label = preprocessing_stu(df_raw, year)
         input_title = 'L2Y'+str(year)+'S_input.csv'
         label_title = 'L2Y'+str(year)+'S_label.csv'
 
-        print(df_input, df_label)
+        df_input.to_csv(os.path.join(path_preprocessed, input_title))
+        df_label.to_csv(os.path.join(path_preprocessed, label_title))
