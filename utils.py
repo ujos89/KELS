@@ -388,3 +388,6 @@ def preprocessing():
 
         df_input.to_csv(os.path.join(path_preprocessed, input_title))
         df_label.to_csv(os.path.join(path_preprocessed, label_title))
+
+def merge_df(df_arr):
+    df_num = len(df_arr)
