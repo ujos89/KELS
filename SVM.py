@@ -21,10 +21,11 @@ df_input = pd.read_csv(os.path.join(path_merge, 'input_merge.csv'))
 df_input = df_input.set_index('L2SID', drop=True)
 df_label = pd.read_csv(os.path.join(path_merge, 'label_merge.csv'))
 df_label = df_label.set_index('L2SID', drop=True)
+df_label = df_label.astype(int)
 
 # train test set split (stratified)
 sss = StratifiedShuffleSplit(n_splits=1, test_size=.2, random_state=42)
-X, y = df_input, df_label["L2Y1_E_CS"]
+X, y = df_input, df_label["L2Y6_E_CS"]
 for train_idx, test_idx in sss.split(X, y):
     X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
     y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
@@ -49,15 +50,15 @@ SVM_rbf = SVC(kernel = 'rbf')
 SVM_rbf.fit(X_train, y_train)
 y_pred = SVM_rbf.predict(X_test)
 # get accuracy_score
-print("y_pred distribution", count_arr(y_pred))
-print("rbf accuracy:", accuracy_score(y_pred, y_test)*100,"%")
-print()
-print("confusion matrix")
-print(confusion_matrix(y_test, y_pred))
-print()
-print("classificaion report")
-print(classification_report(y_test, y_pred))
-print()
+# print("y_pred distribution", count_arr(y_pred))
+# print("rbf accuracy:", accuracy_score(y_pred, y_test)*100,"%")
+# print()
+# print("confusion matrix")
+# print(confusion_matrix(y_test, y_pred))
+# print()
+# print("classificaion report")
+# print(classification_report(y_test, y_pred))
+# print()
 
 # support vector machine wiht linear kernel
 SVM_linear = SVC(kernel = 'linear')
@@ -65,3 +66,6 @@ SVM_linear.fit(X_train, y_train)
 y_pred = SVM_linear.predict(X_test)
 # get accuracy_score
 print("linear accuracy:", accuracy_score(y_pred, y_test)*100,"%")
+print("confusion matrix")
+print(confusion_matrix(y_test, y_pred))
+print()

@@ -21,10 +21,11 @@ df_input = pd.read_csv(os.path.join(path_merge, 'input_merge.csv'))
 df_input = df_input.set_index('L2SID', drop=True)
 df_label = pd.read_csv(os.path.join(path_merge, 'label_merge.csv'))
 df_label = df_label.set_index('L2SID', drop=True)
+df_label = df_label.astype(int)
 
 # train test set split (stratified)
 sss = StratifiedShuffleSplit(n_splits=1, test_size=.2, random_state=42)
-X, y = df_input, df_label["L2Y1_E_CS"]
+X, y = df_input, df_label["L2Y6_E_CS"]
 # X, y = df_input, df_label["L2Y1_E_CS"]+df_label["L2Y1_K_CS"]+df_label["L2Y1_M_CS"]
 
 for train_idx, test_idx in sss.split(X, y):
