@@ -11,6 +11,8 @@ from sklearn.ensemble import VotingClassifier
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
+##### NEED MODIFY######
+
 # extract data
 path = './dataset'
 path_data2013 = os.path.join(path, '2013data')
