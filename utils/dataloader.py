@@ -1,16 +1,18 @@
 import torch
+import os
 from torch.utils.data import Dataset
-from torchvision import transforms
 
 class KELS(Dataset):
-    def __init__(self):
-        pass
+    def __init__(self, root_dir='./preprocessed/merge/outer'):
+        self.root_dir = root_dir
     
     def __len__(self):
         return len()
     
     def __getitem__(self,idx):
-        pass
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+            
         
         
         
