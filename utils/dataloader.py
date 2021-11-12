@@ -1,7 +1,11 @@
 import torch
+import numpy as np
 import os
 import pandas as pd
-from torch.utils.data import Dataset
+
+import torch.utils.data as D
+
+np.random.seed(42)
 
 def get_year(series):
     nan_index = series.index[series.notna()].tolist()
@@ -11,12 +15,12 @@ def get_year(series):
     return year, year_col
     
 
-class KELS(Dataset):
+class KELS(D.Dataset):
     def __init__(self, root_dir='./preprocessed/merge/outer'):
         self.root_dir = root_dir
         self.input_df = pd.read_csv(os.path.join(self.root_dir, 'input_merge.csv')).set_index('L2SID')
         self.label_df = pd.read_csv(os.path.join(self.root_dir, 'label_merge.csv')).set_index('L2SID')
-   
+        
     def __len__(self):
         if len(self.label_df) == len(self.input_df):
             return len(self.label_df)
@@ -26,44 +30,62 @@ class KELS(Dataset):
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
-            
-        year, year_col = get_year(self.label_df.iloc[idx])
         
+        input_series = self.input_df.iloc[idx]
+        label_series = self.label_df.iloc[idx]
+        year, year_col = get_year(label_series)
         
-        
-        
-        
-        
-class FaceLandmarksDataset(Dataset):
-    """Face Landmarks dataset."""
+        input, label = {}, {}
+        label6_fit = {1:4.0, 2:4.0, 3:3.0, 4:3.0, 5:3.0, 6:2.0, 7:2.0, 8:1.0, 9:1.0}
 
-    def __init__(self, csv_file, root_dir, transform=None):
-        """
-        Args:
-            csv_file (string): csv 파일의 경로
-            root_dir (string): 모든 이미지가 존재하는 디렉토리 경로
-            transform (callable, optional): 샘플에 적용될 Optional transform
-        """
-        self.landmarks_frame = pd.read_csv(csv_file)
-        self.root_dir = root_dir
-        self.transform = transform
+        for y, y_col in zip(year, year_col):
+            label_index = [ _ for _ in label_series.index if _.startswith(y_col)]
+            input_index = [ _ for _ in input_series.index if _.startswith(y_col)]
+
+            input_y = input_series[input_index].to_dict()
+            label_y = label_series[label_index].to_dict()
+
+            if y == 6:
+                label_y = {k:label6_fit[int(label_y[k])] for k in label_y}
+
+            input[y], label[y] = input_y, label_y
+
+        sample = {'year':year, 'input':input, 'label':label}
+        return sample
+
+class SplitDataset(D.Dataset):
+    def __init__(self, dataset, indices):
+        self.dataset = dataset
+        self.indices = torch.Tensor(indices)
 
     def __len__(self):
-        return len(self.landmarks_frame)
+        return self.indices.size(0)
+    
+    def __getitem__(self, item):
+        idx = self.indices[item]
+        return self.dataset[idx]
+        
 
-    def __getitem__(self, idx):
-        if torch.is_tensor(idx):
-            idx = idx.tolist()
-
-        img_name = os.path.join(self.root_dir,
-                                self.landmarks_frame.iloc[idx, 0])
-        image = io.imread(img_name)
-        landmarks = self.landmarks_frame.iloc[idx, 1:]
-        landmarks = np.array([landmarks])
-        landmarks = landmarks.astype('float').reshape(-1, 2)
-        sample = {'image': image, 'landmarks': landmarks}
-
-        if self.transform:
-            sample = self.transform(sample)
-
-        return sample
+def train_val_test_split(dataset, test_size=500, val_ratio=.2):
+    # KELS dataset size : 7156
+    # first split test set with size (less than 872, # of complete data)
+    # then, split train validation set with ratio
+    # return : split dataset
+    
+    test_size = min(872, test_size) 
+    complete_indices, incomplete_indices = np.array([]), np.array([])
+    
+    for idx, sample in enumerate(dataset):
+        if sample['year'] == [1,2,3,4,5,6]:
+            complete_indices = np.append(complete_indices, idx)
+        else:
+            incomplete_indices = np.append(incomplete_indices, idx)
+    
+    test_indices = np.random.choice(complete_indices, test_size, replace=False)    
+    train_val_indices = np.concatenate([np.setdiff1d(complete_indices, test_indices), incomplete_indices])
+    
+    val_size = int(len(train_val_indices)*val_ratio)
+    val_indices = np.random.choice(train_val_indices, val_size, replace=False)
+    train_indices = np.setdiff1d(train_val_indices, val_indices)
+        
+    return SplitDataset(dataset, train_indices), SplitDataset(dataset, val_indices), SplitDataset(dataset, test_indices)

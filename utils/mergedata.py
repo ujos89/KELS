@@ -86,10 +86,12 @@ def merge_preprocessed_outerjoin():
     input_merge = pd.DataFrame(input_merge, index=idx)
     input_merge = input_merge.set_index(map(int, list(input_merge.index)))
     input_merge = input_merge.sort_index()
+    input_merge = input_merge.sort_index(axis=1)
 
     label_merge = pd.DataFrame(label_merge, index=idx)
     label_merge = label_merge.set_index(map(int, list(label_merge.index)))
     label_merge = label_merge.sort_index()
+    label_merge = label_merge.sort_index(axis=1)
 
     input_merge.to_csv(os.path.join(path_merge, 'input_merge.csv'), index_label='L2SID')
     label_merge.to_csv(os.path.join(path_merge, 'label_merge.csv'), index_label='L2SID')
