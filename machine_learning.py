@@ -7,8 +7,13 @@ from algorithms.DT import Decision_Tree
 from algorithms.Logistic import Logistic
 from algorithms.RandomForest import RandomForest
 from algorithms.SVM import SVM
+from algorithms.RNN import oneRNN
 
-path_merge = './preprocessed/merge/inner'
+
+
+
+# path_merge = './preprocessed/merge/inner'
+path_merge = '../KELS_data/preprocessed/merge/inner'
 df_input = pd.read_csv(os.path.join(path_merge, 'input_merge.csv'))
 df_input = df_input.set_index('L2SID', drop=True)
 df_label = pd.read_csv(os.path.join(path_merge, 'label_merge.csv'))
@@ -26,6 +31,7 @@ y_test = y_test.to_numpy()
 print("train size:", X_train.shape)
 print("test size:", X_test.shape)
 print()
+
 
 # Decision_Tree(X_train, X_test, y_train, y_test)
 # Logistic(X_train, X_test, y_train, y_test)

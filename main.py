@@ -4,7 +4,8 @@ import torch.utils.data as D
 from utils.dataloader import *
 
 # bulid dataset
-root_dir = './preprocessed/merge/outer'
+# root_dir = './preprocessed/merge/outer'
+root_dir = '../KELS_data/preprocessed/merge/outer'
 dataset = KELS(root_dir=root_dir)
 print(dataset[3])
 # train_dataset, val_dataset, test_dataset = train_val_test_split(dataset, test_size=300, val_ratio=.2)
