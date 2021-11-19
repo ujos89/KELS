@@ -39,6 +39,10 @@ epochs = 1
 #                    device=device).to(device)
 
 def sample2tensor(sample):
+    if not sample['year']:
+        print("="*10,'YEAR NAN DETECTED', "="*10)
+        return
+    
     year = torch.cat(sample['year'])
     input = sample['input']
     
@@ -46,7 +50,7 @@ def sample2tensor(sample):
         input_ = torch.cat([v for k, v in input[int(y)].items()])
         
         if torch.any(torch.isnan(input_)):
-            print("="*10,'NAN DETECTED', "="*10)
+            print("="*10,'INPUT NAN DETECTED', "="*10)
             continue
         
         print(y, input_)
