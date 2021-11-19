@@ -2,13 +2,10 @@
 import torch
 import torch.nn as nn
 
-
-
 inputs_test = torch.Tensor(1, 10, 5)
-print(inputs_test.shape[2])
+# print(inputs_test.shape[2])
 
 # one way
-# exit()
 def oneRNN(input, hidden_size) : 
   input_size = (input.shape[2]) # input shape
   # (batch_size, time_steps, input_size)
@@ -36,6 +33,9 @@ class VanillaRNN(nn.Module):
     self.fc = nn.Sequential(nn.Linear(hidden_size * sequence_length, 1), nn.Sigmoid())
 
   def forward(self, x):
+    ###
+    # Encoder
+    ###
     h0 = torch.zeros(self.num_layers, x.size()[0], self.hidden_size).to(self.device) # 초기 hidden state 설정하기.
     out, _ = self.rnn(x, h0) # out: RNN의 마지막 레이어로부터 나온 output feature 를 반환한다. hn: hidden state를 반환한다.
     out = out.reshape(out.shape[0], -1) # many to many 전략
@@ -43,4 +43,6 @@ class VanillaRNN(nn.Module):
     return out
 
 
-
+# class EncoderRNN(nn.Module):
+#   def __init__(self, device):
+#     self.device = device

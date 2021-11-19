@@ -10,6 +10,7 @@ from utils.utils import *
 import torch.optim as optim
 from algorithms.RNN import VanillaRNN
 import matplotlib.pyplot as plt
+from sklearn.model_selection import StratifiedShuffleSplit
 
 #https://data-science-hi.tistory.com/190
 
@@ -34,7 +35,7 @@ df_label = df_label.set_index('L2SID', drop=True)
 df_label = df_label.astype(int)
 
 
-# sss = StratifiedShuffleSplit(n_splits=1, test_size=.2, random_state=42)
+sss = StratifiedShuffleSplit(n_splits=1, test_size=.2, random_state=42)
 X, y = df_input, df_label["L2Y6_K_CS"]
 for train_idx, test_idx in sss.split(X, y):
     X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
@@ -105,8 +106,13 @@ for epoch in range(num_epochs):
   running_loss = 0.0
 
   for data in train_loader:
+    # seq_ = len(data['year'])
+    
 
     seq, target = data # 배치 데이터.
+    ###
+    # seq <- input_size , 
+    ###
     out = model(seq)   # 모델에 넣고,
     loss = criterion(out, target) # output 가지고 loss 구하고,
 

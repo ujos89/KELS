@@ -1,42 +1,59 @@
 import torch
 import torch.utils.data as D
-
+import pretty_errors
+import argparse
+from rich import print
+from algorithms.RNN import *
 from utils.dataloader import *
 
 # bulid dataset
-# root_dir = './preprocessed/merge/outer'
-root_dir = '../KELS_data/preprocessed/merge/outer'
+root_dir = './preprocessed/merge/outer'
 dataset = KELS(root_dir=root_dir)
-print(dataset[3])
-# train_dataset, val_dataset, test_dataset = train_val_test_split(dataset, test_size=300, val_ratio=.2)
+train_sampler, val_sampler, test_sampler = train_val_test_split(dataset, test_size=300, val_ratio=.2)
 
+train_loader = D.DataLoader(dataset=dataset, sampler=train_sampler, shuffle=False)
+val_loader = D.DataLoader(dataset=dataset, sampler=val_sampler, shuffle=False)
+test_loader = D.DataLoader(dataset=dataset, sampler=test_sampler, shuffle=False)
 
-idx=348
-print(dataset[idx])
-print(len(dataset[idx]['input'][1]))
-print(len(dataset[idx]['input'][2]))
-print(len(dataset[idx]['input'][3]))
-print(len(dataset[idx]['input'][4]))
-print(len(dataset[idx]['input'][5]))
-print(len(dataset[idx]['input'][6]))
+# print(len(train_loader))  -> 5485
+# print(len(val_loader))    -> 1371
+# print(len(test_loader))   -> 300
 
-exit()
-###### DEBUG : TypeError: Cannot index by location index with a non-integer key
-###### TRY bulid custom sampler to split
+# parser = argparse.ArgumentParser()
+# parser.add_argument('--cpu', action='store_true',help='run in cpu') 
+# args = parser.parse_args()
+# GPU_NUM = 0
+# if args.cpu:
+#     device = torch.device('cpu')
+# else:
+#     device = torch.device('cuda')
+#     print(torch.cuda.get_device_name(GPU_NUM), "allocated in ", torch.cuda.current_device())
 
-# hyperparameters for dataloader
-batch_size = 4
+# hyperparameters for training
+epochs = 1
 
-# train_loader = D.DataLoader(dataset=dataset, batch_size=batch_size, sampler=train_sampler, shuffle=False)
-# val_loader = D.DataLoader(dataset=dataset, batch_size=batch_size, sampler=val_sampler, shuffle=False)
-# test_loader = D.DataLoader(dataset=dataset, batch_size=batch_size, sampler=test_sampler, shuffle=False)
+# model = VanillaRNN(input_size=input_size,
+#                    hidden_size=hidden_size,
+#                    sequence_length=sequence_length,
+#                    num_layers=num_layers,
+#                    device=device).to(device)
 
-# # hyperparameters for training
-# epochs = 5
-
-# for epoch in range(1, epochs+1):
-#     for idx, sample in enumerate(train_loader):
-#         print(sample)
-#         break
+def sample2tensor(sample):
+    year = torch.cat(sample['year'])
+    input = sample['input']
     
-#     break
+    for y in year:
+        input_ = torch.cat([v for k, v in input[int(y)].items()])
+        
+        if torch.any(torch.isnan(input_)):
+            print("="*10,'NAN DETECTED', "="*10)
+            continue
+        
+        print(y, input_)
+        
+    ###### nan exception tratment #### 
+        
+
+for epoch in range(1, epochs+1):
+    for idx, sample in enumerate(train_loader):
+        sample2tensor(sample)   

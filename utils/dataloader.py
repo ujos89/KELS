@@ -14,7 +14,6 @@ def get_year(series):
     
     return year, year_col
     
-
 class KELS(D.Dataset):
     def __init__(self, root_dir='./preprocessed/merge/outer'):
         self.root_dir = root_dir
@@ -65,49 +64,6 @@ class SplitDataset(D.Dataset):
         idx = self.indices[item]
         return self.dataset[idx]
         
-class SSGDSampler(D.Sampler):
-    r"""Samples elements according to SSGD Sampler
-    Arguments:
-        data_source (Dataset): dataset to sample from
-    """
-
-    def __init__(self, data_source, model, batch_size):
-        self.training_data = data_source.train_data.to(device)
-        self.training_label = data_source.train_labels.to(device)
-        self.training_data = self.training_data.view(self.training_data.shape[0], 1, self.training_data.shape[1], self.training_data.shape[2])
-        self.training_data = self.training_data.type(torch.cuda.FloatTensor)
-        self.model = model
-        self.batch_size = batch_size
-
-
-    def compute_score(self):
-        sampled=[]
-        print(self.training_data.shape)
-        output = model(self.training_data)
-        loss = F.cross_entropy(output, self.training_label, reduce=False)
-        prob = F.softmax(loss)
-        feat = model.feat
-        for _ in range(0, self.batch_size):
-            if len(sampled)==0:
-                 sampled.extend(torch.argmax(prob))
-            else:
-                dist = torch.mm(self.feat, self.feat[sampled].T)
-                min_dist = torch.min(dist, dim=0)
-                mean_dist = torch.mean(dist, dim=0)
-                score = min_dist + mean_dist + prob
-                max_idx = torch.argmax(score)
-                sampled.extend(max_idx)
-        return sampled
-
-    def __iter__(self):
-        sampled=self.compute_score()
-        print(sampled)
-        return iter(sampled)
-
-    def __len__(self):
-        return len(self.data_source)
-
-        
 
 def train_val_test_split(dataset, test_size=500, val_ratio=.2):
     # KELS dataset size : 7156
@@ -131,4 +87,10 @@ def train_val_test_split(dataset, test_size=500, val_ratio=.2):
     val_indices = np.random.choice(train_val_indices, val_size, replace=False)
     train_indices = np.setdiff1d(train_val_indices, val_indices)
         
-    return SplitDataset(dataset, train_indices), SplitDataset(dataset, val_indices), SplitDataset(dataset, test_indices)
+    text_indcies = test_indices.astype(int)
+    val_indices = val_indices.astype(int)
+    train_indices = train_indices.astype(int)
+        
+        
+    
+    return D.SubsetRandomSampler(train_indices), D.SubsetRandomSampler(val_indices), D.SubsetRandomSampler(test_indices)
