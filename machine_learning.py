@@ -30,7 +30,6 @@ for train_idx, test_idx in sss.split(X, y):
 y_test = y_test.to_numpy()
 print("train size:", X_train.shape)
 print("test size:", X_test.shape)
-print()
 
 
 # Decision_Tree(X_train, X_test, y_train, y_test)
