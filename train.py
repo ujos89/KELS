@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--cpu', action='store_true',help='run in cpu') 
 args = parser.parse_args()
 
-GPU_NUM = 0 
+GPU_NUM = 0
 
 if args.cpu:
     device = torch.device('cpu')
@@ -54,26 +54,34 @@ epochs = 1
 #                    device=device).to(device)
 
 def sample2tensor(sample):
-    if not sample['year']:
-        print("="*10,'YEAR NAN DETECTED', "="*10)
-        return
     
-    year = torch.cat(sample['year'])
-    input = sample['input']
-    
-    for y in year:
-        input_ = torch.cat([v for k, v in input[int(y)].items()])
+    # if not sample['year']:
+        # print("="*10,'YEAR NAN DETECTED', "="*10)
+        # return
         
-        if torch.any(torch.isnan(input_)):
-            print("="*10,'INPUT NAN DETECTED', "="*10)
-            continue
-    
-        print(y, input_)
-        
-    
+    if sample['year']: 
+        year = torch.cat(sample['year'])
+        input = sample['input']
+        for y in year:
+            input_ = torch.cat([v for k, v in input[int(y)].items()])
+
+            if torch.any(torch.isnan(input_)):
+                print("="*10,'INPUT NAN DETECTED', "="*10)
+                continue
+            else :
+                input_data = input_
+                return y, input_data 
     ###### nan exception tratment #### 
-        
+
+# train_loader = train_loader.to(device)
 
 for epoch in range(1, epochs+1):
     for idx, sample in enumerate(train_loader):
-        sample2tensor(sample)   
+        y_train, x_train = sample2tensor(sample)
+        print(y_train.type()) 
+        print(x_train.type()) 
+        y_train = y_train.to(device)
+        x_train = x_train.to(device)
+
+        print(x_train)
+        print(y_train)
