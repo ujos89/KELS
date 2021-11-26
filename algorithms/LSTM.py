@@ -19,14 +19,18 @@ class KELS_LSTM(nn.Module):
     def forward(self, input):
         input = torch.tensor(input, dtype=torch.float32).to(self.device)
         input = input.unsqueeze(0)
-        h0 = torch.zeros(self.layer_num, self.batch_size, self.hidden_size).to(self.device)
-        c0 = torch.zeros(self.layer_num, self.batch_size, self.hidden_size).to(self.device)
+        h0 = torch.zeros(self.layer_num, self.batch_size, self.hidden_size, requires_grad=True).to(self.device)
+        c0 = torch.zeros(self.layer_num, self.batch_size, self.hidden_size, requires_grad=True).to(self.device)
         
         output, _ = self.lstm(input, (h0, c0))
         output = F.softmax(output[0], dim=1)
-        output = torch.argmax(output, dim=1, keepdim=True)
+        
+        max_idx = torch.argmax(output, dim=1, keepdim=True)
+        pred = torch.zeros_like(output)
+        pred.scatter_(1, max_idx, 1)
+        pred = torch.tensor(pred, dtype=torch.float32, requires_grad=True).to(self.device)
         
         ##ADD FC LAYER TO LABEL DETECT
         
-        return output
+        return pred
     

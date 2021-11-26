@@ -93,20 +93,22 @@ for epoch in range(1, epochs+1):
         if not samples is None:
             year, input, label = samples
             model.zero_grad()
+            optimizer.zero_grad()
             
             # label for English
             label = label[:, 0].unsqueeze(-1)-1
-            label = F.one_hot(label.to(torch.int64), num_classes=4).squeeze(1)
+            label = F.one_hot(label.to(torch.int64), num_classes=4).squeeze(1).to(device)
+            label = torch.tensor(label, dtype=torch.float32).to(device)
 
             output = model(input)
             
-            print(label)
-            print(output)
+            # print(label)
+            # print(output)
             
             loss = criterion(output, label)            
+            print(loss.item())
             loss.backward()
             optimizer.step()
             
-            print(loss.item())
             
             break
