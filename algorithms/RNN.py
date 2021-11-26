@@ -1,4 +1,3 @@
-## RNN moduel with first 5 year
 import torch
 import torch.nn as nn
 
