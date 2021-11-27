@@ -25,4 +25,4 @@
 - Voting Classifier
 
 ## Models
-Model based on RNN, LSTM, GRU
+![model](./image/overview.png)
