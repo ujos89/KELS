@@ -15,7 +15,7 @@
 - dataset: KELS, sorted by L2SID
 - sample {'year': [ year ], 'input':{columns_name:input}, 'label':{columns_name:label}}
 
-## Baslines
+## Baselines
 - PCA
 - Logistic Regression
 - Decision Tree
