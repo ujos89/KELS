@@ -15,7 +15,7 @@
 - dataset: KELS, sorted by L2SID
 - sample {'year': [ year ], 'input':{columns_name:input}, 'label':{columns_name:label}}
 
-## Algorithms
+## Baslines
 - PCA
 - Logistic Regression
 - Decision Tree
@@ -23,3 +23,6 @@
 - Random Forest
 - Support Vector Machine
 - Voting Classifier
+
+## Models
+Model based on RNN, LSTM, GRU
