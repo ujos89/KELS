@@ -16,13 +16,10 @@
 - sample {'year': [ year ], 'input':{columns_name:input}, 'label':{columns_name:label}}
 
 ## Baselines
-- PCA
 - Logistic Regression
 - Decision Tree
-- Locally Linear Embedding
 - Random Forest
 - Support Vector Machine
-- Voting Classifier
 
 ## Models
 ![model](./image/overview.png)
