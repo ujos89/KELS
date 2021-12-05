@@ -48,6 +48,7 @@ class KELS_LSTM_(nn.Module):
         
         # self.lstm = nn.LSTM(input_size = self.input_size, hidden_size = self.hidden_size, batch_first=True)
         self.lstm = nn.LSTM(input_size = 5, hidden_size = self.hidden_size, batch_first=True)
+        # self.fc1 = nn.Linear(hidden_size, )
         
         
     def forward(self, input, year):
@@ -65,6 +66,10 @@ class KELS_LSTM_(nn.Module):
             output, hidden = self.lstm(input_.unsqueeze(0), hidden)
             
         h_t, c_t = hidden
+        
+        
+        
+        
         h_t = h_t.flatten()
         
         pred = F.softmax(h_t)

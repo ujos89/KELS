@@ -99,7 +99,7 @@ def train_val_test_split(dataset, test_size=500, val_ratio=.2):
     val_indices = np.random.choice(train_val_indices, val_size, replace=False)
     train_indices = np.setdiff1d(train_val_indices, val_indices)
         
-    text_indcies = test_indices.astype(int)
+    test_indices = test_indices.astype(int)
     val_indices = val_indices.astype(int)
     train_indices = train_indices.astype(int)
         
