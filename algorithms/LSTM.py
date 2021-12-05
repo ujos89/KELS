@@ -33,7 +33,8 @@ class KELS_LSTM(nn.Module):
         ##ADD FC LAYER TO LABEL DETECT
         
         return pred
-    
+
+
 class KELS_LSTM_(nn.Module):
     def __init__(self, input_size, hidden_size, batch_size, device):
         super(KELS_LSTM_, self).__init__()

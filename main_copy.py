@@ -7,32 +7,44 @@ import pretty_errors
 import argparse
 from rich import print
 from algorithms.RNN import *
-from algorithms.LSTM import KELS_LSTM_
+from algorithms.LSTM import *
 from utils.dataloader import *
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--cpu', action='store_true',help='run in cpu') 
-args = parser.parse_args()
+
 GPU_NUM = 0
+args = parser.parse_args()
 if args.cpu:
     device = torch.device('cpu')
 else:
     device = torch.device('cuda')
     print(torch.cuda.get_device_name(GPU_NUM), "allocated in ", torch.cuda.current_device())
+# if torch.cuda.is_available():
+#     device = 'cuda'
+# else:
+#     device = 'cpu'
 
 # bulid dataset
 root_dir = './preprocessed/merge/outer'
+# root_dir = './preprocessed/merge/inner'
 # root_dir = '../KELS_data/preprocessed/merge/outer'
 
 dataset = KELS(root_dir=root_dir)
-train_sampler, val_sampler, test_sampler = train_val_test_split(dataset, test_size=300, val_ratio=.2)
+train_sampler, val_sampler, test_sampler = train_val_test_split(dataset, test_size=300, val_ratio=.2)   #outer
+# train_sampler, val_sampler, test_sampler = train_val_test_split(dataset, test_size=50, val_ratio=.2)  #inner
 
 train_loader = D.DataLoader(dataset=dataset, sampler=train_sampler, shuffle=False)
 val_loader = D.DataLoader(dataset=dataset, sampler=val_sampler, shuffle=False)
 test_loader = D.DataLoader(dataset=dataset, sampler=test_sampler, shuffle=False)
 
-### NEED TO MODIFY
+### INNER
+# print(len(train_loader))    -> 568
+# print(len(val_loader))      -> 142
+# print(len(test_loader))     -> 50
+
+### OUTER
 # print(len(train_loader))  -> 5485
 # print(len(val_loader))    -> 1371
 # print(len(test_loader))   -> 300
@@ -108,21 +120,22 @@ for epoch in range(1, epochs+1):
             label = label[:, 0].unsqueeze(-1)-1
             label = F.one_hot(label.to(torch.int64), num_classes=4).squeeze(1).to(device)
             label = torch.tensor(label, dtype=torch.float32).to(device)
+            #label = label[-1].unsqueeze(1)
             # print(label)
 
             output = model(input, year)
             
-            loss = criterion(output.unsqueeze(1), label[-1].unsqueeze(1))
+            loss = criterion(output.unsqueeze(0), label[-1].unsqueeze(0))
 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
             
-            # print(loss.item())
-            break
+    
             
     # print log
     print("EPOCH: %d / %d, LOSS: %f" % (epoch, epochs, loss.item()))
+    
             
     if epoch % save_period == 0:
         torch.save(model, os.path.join(path_save,'LSTM'+str(epoch)+'.pt'))
@@ -140,18 +153,18 @@ for epoch in range(1, epochs+1):
                 label = label[:, 0].unsqueeze(-1)-1
                 label = F.one_hot(label.to(torch.int64), num_classes=4).squeeze(1).to(device)
                 label = torch.tensor(label, dtype=torch.float32).to(device)
+                label = label[-1].unsqueeze(0)
                 
                 output = model(input, year)
-                max_idx = torch.argmax(output, dim=1, keepdim=True)
-                pred = torch.zeros_like(output)
-                pred.scatter_(1, max_idx, 1)
-                pred = torch.tensor(pred, dtype=torch.float32)
                 
-                print(pred)
-                print(label)
+                
+                pred = torch.argmax(output)
+                label = torch.argmax(label)
+                
+
 
                 # predict last year
-                if torch.all(torch.eq(pred, label[-1])):
+                if pred == label:
                 # if torch.all(torch.eq(output, label)):
                     correct += 1
                 total += 1 
