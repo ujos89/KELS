@@ -5,3 +5,4 @@ __pycache__
 dataset/
 preprocessed/
 sleep/
+model/

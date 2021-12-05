@@ -7,7 +7,7 @@ import pretty_errors
 import argparse
 from rich import print
 from algorithms.RNN import *
-from algorithms.LSTM import KELS_LSTM
+from algorithms.LSTM import KELS_LSTM_
 from utils.dataloader import *
 
 
@@ -81,7 +81,10 @@ label_num = 4
 # sequence is variable
 batch_size = 1
 
-model = KELS_LSTM(input_size=columns_num, hidden_size=label_num, batch_size=batch_size, device=device)
+input_size = 5
+hidden_size = 10
+
+model = KELS_LSTM_(input_size=columns_num, hidden_size=label_num, batch_size=batch_size, device=device)
 model.to(device)
 optimizer = optim.Adam(model.parameters(), lr=.01)
 criterion = nn.CrossEntropyLoss()
@@ -102,25 +105,20 @@ for epoch in range(1, epochs+1):
             model.zero_grad()
             
             # label for English
-            print(label)
             label = label[:, 0].unsqueeze(-1)-1
-            print(label)
             label = F.one_hot(label.to(torch.int64), num_classes=4).squeeze(1).to(device)
-            print(label)
             label = torch.tensor(label, dtype=torch.float32).to(device)
-            print(label)
+            # print(label)
 
-            output = model(input)
+            output = model(input, year)
             
-            print(output)
-            break
-            # loss = criterion(output, label)
-            # loss = criterion(output[-1, :], label[-1 ,:])
+            loss = criterion(output.unsqueeze(1), label[-1].unsqueeze(1))
 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-    break
+            
+            # print(loss.item())
             
     # print log
     print("EPOCH: %d / %d, LOSS: %f" % (epoch, epochs, loss.item()))
@@ -142,11 +140,17 @@ for epoch in range(1, epochs+1):
                 label = F.one_hot(label.to(torch.int64), num_classes=4).squeeze(1).to(device)
                 label = torch.tensor(label, dtype=torch.float32).to(device)
                 
-                output = model(input)
+                output = model(input, year)
+                max_idx = torch.argmax(output, dim=1, keepdim=True)
+                pred = torch.zeros_like(output)
+                pred.scatter_(1, max_idx, 1)
+                pred = torch.tensor(pred, dtype=torch.float32)
                 
+                print(pred)
+                print(label)
 
                 # predict last year
-                if torch.all(torch.eq(output[-1, :], label[-1, :])):
+                if torch.all(torch.eq(pred, label[-1])):
                 # if torch.all(torch.eq(output, label)):
                     correct += 1
                 total += 1 
