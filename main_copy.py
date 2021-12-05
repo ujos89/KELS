@@ -119,6 +119,7 @@ for epoch in range(1, epochs+1):
             optimizer.step()
             
             # print(loss.item())
+            break
             
     # print log
     print("EPOCH: %d / %d, LOSS: %f" % (epoch, epochs, loss.item()))
