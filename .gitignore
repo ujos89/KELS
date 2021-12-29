@@ -6,3 +6,4 @@ dataset/
 preprocessed/
 sleep/
 models/
+.vscode/
