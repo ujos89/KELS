@@ -98,7 +98,7 @@ optimizer = optim.Adam(model.parameters(), lr=.1)
 criterion = nn.CrossEntropyLoss()
 
 #save parameters
-path_save = './models/LSTM'
+path_save = './models/MLP'
 save_period = 10
 best_acc = 0
 best_model = model
@@ -131,7 +131,7 @@ for epoch in range(1, epochs+1):
     print("EPOCH: %d / %d, LOSS: %f" % (epoch, epochs, loss.item()))
             
     if epoch % save_period == 0:
-        torch.save(model, os.path.join(path_save,'LSTM'+str(epoch)+'.pt'))
+        torch.save(model, os.path.join(path_save,'MLP'+str(epoch)+'.pt'))
         
     # VALIDATION
     model.eval()
@@ -165,7 +165,7 @@ for epoch in range(1, epochs+1):
         best_acc = acc
         best_model = model
         
-torch.save(best_model, os.path.join(path_save,'LSTM_best.pt'))
+# torch.save(best_model, os.path.join(path_save,'MLP_best.pt'))
         
 #TEST
 total, correct = 0, 0
