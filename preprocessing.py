@@ -80,12 +80,12 @@ for file_name, df in zip(file_names, dfs):
 # df_label.to_pickle("./preprocessed/prepared/nan/label.pkl")
 
 ## fill missing value
-df_y1_fill = df_y1.fillna(df_y1.mean())
-df_y2_fill = df_y2.fillna(df_y2.mean())
-df_y3_fill = df_y3.fillna(df_y3.mean())
-df_y4_fill = df_y4.fillna(df_y4.mean())
-df_y5_fill = df_y5.fillna(df_y5.mean())
-df_y6_fill = df_y6.fillna(df_y6.mean())
+# df_y1_fill = df_y1.fillna(df_y1.mean())
+# df_y2_fill = df_y2.fillna(df_y2.mean())
+# df_y3_fill = df_y3.fillna(df_y3.mean())
+# df_y4_fill = df_y4.fillna(df_y4.mean())
+# df_y5_fill = df_y5.fillna(df_y5.mean())
+# df_y6_fill = df_y6.fillna(df_y6.mean())
 
 # df_y1_fill.to_pickle("./preprocessed/prepared/fill/L2Y1.pkl")
 # df_y2_fill.to_pickle("./preprocessed/prepared/fill/L2Y2.pkl")
@@ -94,3 +94,46 @@ df_y6_fill = df_y6.fillna(df_y6.mean())
 # df_y5_fill.to_pickle("./preprocessed/prepared/fill/L2Y5.pkl")
 # df_y6_fill.to_pickle("./preprocessed/prepared/fill/L2Y6.pkl")
 # df_label.to_pickle("./preprocessed/prepared/fill/label.pkl")
+
+# dataframe without no response answer
+y1_index = set(df_y1[df_y1.isnull().all(axis=1)].index)            
+y2_index = set(df_y2[df_y2.isnull().all(axis=1)].index)            
+y3_index = set(df_y3[df_y3.isnull().all(axis=1)].index)            
+y4_index = set(df_y4[df_y4.isnull().all(axis=1)].index)            
+y5_index = set(df_y5[df_y5.isnull().all(axis=1)].index)            
+y6_index = set(df_y6[df_y6.isnull().all(axis=1)].index)            
+nan_index = y1_index & y2_index & y3_index & y4_index & y5_index & y6_index
+
+df_y1_drop = df_y1.drop(list(nan_index))
+df_y2_drop = df_y2.drop(list(nan_index))
+df_y3_drop = df_y3.drop(list(nan_index))
+df_y4_drop = df_y4.drop(list(nan_index))
+df_y5_drop = df_y5.drop(list(nan_index))
+df_y6_drop = df_y6.drop(list(nan_index))
+df_label_drop = df_label.drop(list(nan_index))
+
+df_y1_drop.to_pickle("./preprocessed/prepared/drop/nan/L2Y1.pkl")
+df_y2_drop.to_pickle("./preprocessed/prepared/drop/nan/L2Y2.pkl")
+df_y3_drop.to_pickle("./preprocessed/prepared/drop/nan/L2Y3.pkl")
+df_y4_drop.to_pickle("./preprocessed/prepared/drop/nan/L2Y4.pkl")
+df_y5_drop.to_pickle("./preprocessed/prepared/drop/nan/L2Y5.pkl")
+df_y6_drop.to_pickle("./preprocessed/prepared/drop/nan/L2Y6.pkl")
+df_label_drop.to_pickle("./preprocessed/prepared/drop/nan/label.pkl")
+
+
+df_y1_drop_fill = df_y1_drop.fillna(df_y1_drop.mean())
+df_y2_drop_fill = df_y2_drop.fillna(df_y2_drop.mean())
+df_y3_drop_fill = df_y3_drop.fillna(df_y3_drop.mean())
+df_y4_drop_fill = df_y4_drop.fillna(df_y4_drop.mean())
+df_y5_drop_fill = df_y5_drop.fillna(df_y5_drop.mean())
+df_y6_drop_fill = df_y6_drop.fillna(df_y6_drop.mean())
+
+df_y1_drop_fill.to_pickle("./preprocessed/prepared/drop/fill/L2Y1.pkl")
+df_y2_drop_fill.to_pickle("./preprocessed/prepared/drop/fill/L2Y2.pkl")
+df_y3_drop_fill.to_pickle("./preprocessed/prepared/drop/fill/L2Y3.pkl")
+df_y4_drop_fill.to_pickle("./preprocessed/prepared/drop/fill/L2Y4.pkl")
+df_y5_drop_fill.to_pickle("./preprocessed/prepared/drop/fill/L2Y5.pkl")
+df_y6_drop_fill.to_pickle("./preprocessed/prepared/drop/fill/L2Y6.pkl")
+df_label_drop.to_pickle("./preprocessed/prepared/drop/fill/label.pkl")
+
+#

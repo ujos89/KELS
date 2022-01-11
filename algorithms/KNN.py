@@ -1,18 +1,13 @@
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-import sys
-sys.path.append('..')
-from utils.visualization import *
-
-# Decision tree
-def Decision_Tree(X_train, X_test, y_train, y_test):
-    dt = DecisionTreeClassifier()
-    dt = dt.fit(X_train, y_train)
-    y_pred = dt.predict(X_test)
+def KNN(X_train, X_test, y_train, y_test):
+    KN = KNeighborsClassifier()
+    KN.fit(X_train, y_train)
+    y_pred = KN.predict(X_test)
 
     # accuracy
-    print("Decision Tree")
+    print("Logistic Regression Classifier")
     print("accuracy:", accuracy_score(y_pred, y_test)*100,"%")
     print()
     print("confusion matrix")
