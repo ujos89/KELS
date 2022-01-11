@@ -391,3 +391,17 @@ def preprocessing():
 
 def merge_df(df_arr):
     df_num = len(df_arr)
+    
+def accuracy_roughly(y_pred, y_label):
+    if len(y_pred) != len(y_label):
+        print("not available, fit size first")
+        return
+    
+    cnt = 0
+    correct = 0
+    for pred, label in zip(y_pred, y_label):
+        cnt += 1
+        if abs(pred-label) <= 1:
+            correct += 1
+    
+    return correct / cnt

@@ -3,7 +3,7 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 
 import sys
 sys.path.append('..')
-from utils.visualization import *
+from utils.utils import accuracy_roughly
 
 # Decision tree
 def Decision_Tree(X_train, X_test, y_train, y_test):
@@ -14,6 +14,8 @@ def Decision_Tree(X_train, X_test, y_train, y_test):
     # accuracy
     print("Decision Tree")
     print("accuracy:", accuracy_score(y_pred, y_test)*100,"%")
+    print()
+    print("accuracy(roughly):", accuracy_roughly(y_pred, y_test)*100,"%")
     print()
     print("confusion matrix")
     print(confusion_matrix(y_test, y_pred))

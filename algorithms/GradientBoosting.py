@@ -1,6 +1,10 @@
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
+import sys
+sys.path.append('..')
+from utils.utils import accuracy_roughly
+
 # Gradient Boosting classifier
 def Grad_Boost(X_train, X_test, y_train, y_test,max_depth = 3):
     GB = GradientBoostingClassifier(max_depth=max_depth,random_state=42, n_estimators=256)
@@ -10,6 +14,8 @@ def Grad_Boost(X_train, X_test, y_train, y_test,max_depth = 3):
     # accuracy
     print("Gradient Boosting Classifier")
     print("accuracy:", accuracy_score(y_pred, y_test)*100,"%")
+    print()
+    print("accuracy(roughly):", accuracy_roughly(y_pred, y_test)*100,"%")
     print()
     print("confusion matrix")
     print(confusion_matrix(y_test, y_pred))
