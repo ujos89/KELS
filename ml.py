@@ -28,7 +28,7 @@ for file_name in file_names:
         label = df_
         
 sss = StratifiedShuffleSplit(n_splits=1, test_size=.2, random_state=42)
-X, y = input, label["L2Y6_E_CS"]
+X, y = input, label["L2Y6_K_CS"]
 
 for train_idx, test_idx in sss.split(X, y):
     X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
