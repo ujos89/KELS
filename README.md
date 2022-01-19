@@ -9,17 +9,20 @@
 - used only categorical data (not continuous data)
 - fill missing value with average of column
 - label for L2Y6: 1,2,3,4,5,6,7,8,9
-- number of preprocessed dataset:
 
 ## Dataloader
 - dataset: KELS, sorted by L2SID
 - sample {'year': [ year ], 'input':{columns_name:input}, 'label':{columns_name:label}}
 
-## Baselines
-- Logistic Regression
+## Baselines (ML algortimhs)
 - Decision Tree
-- Random Forest
 - Support Vector Machine
+- Extra Trees
+- Random Forest
+- K-nearest neighbor
+- Gradient Boosting
 
 ## Models
-![model](./image/overview.png)
+- MLP (2 Layer)
+- LSTM
+- Transformer (ViT)
