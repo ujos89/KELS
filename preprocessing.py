@@ -1,7 +1,18 @@
 import pandas as pd
 import os 
 import numpy as np
+from utils.utils import get_savs, get_sav_label6, preprocessing
 
+# ### STEP1. convert sav file to csv files
+# os.makedirs('./preprocessed/raw' ,exist_ok=True)
+# os.makedirs('./preprocessed/preprocessed' ,exist_ok=True)
+# get_savs()
+
+# ### STEP2. Merge columns, extract features
+# preprocessing()
+# get_sav_label6()
+
+### STEP3. Prepared dataset (Students arrangement)
 path_preprocessed = 'preprocessed/preprocessed/'
 file_names = sorted(os.listdir(path_preprocessed))
 
@@ -112,13 +123,14 @@ df_y5_drop = df_y5.drop(list(nan_index))
 df_y6_drop = df_y6.drop(list(nan_index))
 df_label_drop = df_label.drop(list(nan_index))
 
-df_y1_drop.to_pickle("./preprocessed/prepared/drop/nan/L2Y1.pkl")
-df_y2_drop.to_pickle("./preprocessed/prepared/drop/nan/L2Y2.pkl")
-df_y3_drop.to_pickle("./preprocessed/prepared/drop/nan/L2Y3.pkl")
-df_y4_drop.to_pickle("./preprocessed/prepared/drop/nan/L2Y4.pkl")
-df_y5_drop.to_pickle("./preprocessed/prepared/drop/nan/L2Y5.pkl")
-df_y6_drop.to_pickle("./preprocessed/prepared/drop/nan/L2Y6.pkl")
-df_label_drop.to_pickle("./preprocessed/prepared/drop/nan/label.pkl")
+os.makedirs('./preprocessed/prepared/nan' ,exist_ok=True)
+df_y1_drop.to_pickle("./preprocessed/prepared/nan/L2Y1.pkl")
+df_y2_drop.to_pickle("./preprocessed/prepared/nan/L2Y2.pkl")
+df_y3_drop.to_pickle("./preprocessed/prepared/nan/L2Y3.pkl")
+df_y4_drop.to_pickle("./preprocessed/prepared/nan/L2Y4.pkl")
+df_y5_drop.to_pickle("./preprocessed/prepared/nan/L2Y5.pkl")
+df_y6_drop.to_pickle("./preprocessed/prepared/nan/L2Y6.pkl")
+df_label_drop.to_pickle("./preprocessed/prepared/nan/label.pkl")
 
 
 df_y1_drop_fill = df_y1_drop.fillna(df_y1_drop.mean())
@@ -128,12 +140,13 @@ df_y4_drop_fill = df_y4_drop.fillna(df_y4_drop.mean())
 df_y5_drop_fill = df_y5_drop.fillna(df_y5_drop.mean())
 df_y6_drop_fill = df_y6_drop.fillna(df_y6_drop.mean())
 
-df_y1_drop_fill.to_pickle("./preprocessed/prepared/drop/fill/L2Y1.pkl")
-df_y2_drop_fill.to_pickle("./preprocessed/prepared/drop/fill/L2Y2.pkl")
-df_y3_drop_fill.to_pickle("./preprocessed/prepared/drop/fill/L2Y3.pkl")
-df_y4_drop_fill.to_pickle("./preprocessed/prepared/drop/fill/L2Y4.pkl")
-df_y5_drop_fill.to_pickle("./preprocessed/prepared/drop/fill/L2Y5.pkl")
-df_y6_drop_fill.to_pickle("./preprocessed/prepared/drop/fill/L2Y6.pkl")
-df_label_drop.to_pickle("./preprocessed/prepared/drop/fill/label.pkl")
+os.makedirs('./preprocessed/prepared/fill' ,exist_ok=True)
+df_y1_drop_fill.to_pickle("./preprocessed/prepared/fill/L2Y1.pkl")
+df_y2_drop_fill.to_pickle("./preprocessed/prepared/fill/L2Y2.pkl")
+df_y3_drop_fill.to_pickle("./preprocessed/prepared/fill/L2Y3.pkl")
+df_y4_drop_fill.to_pickle("./preprocessed/prepared/fill/L2Y4.pkl")
+df_y5_drop_fill.to_pickle("./preprocessed/prepared/fill/L2Y5.pkl")
+df_y6_drop_fill.to_pickle("./preprocessed/prepared/fill/L2Y6.pkl")
+df_label_drop.to_pickle("./preprocessed/prepared/fill/label.pkl")
 
 #

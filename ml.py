@@ -9,7 +9,7 @@ from algorithms.GradientBoosting import Grad_Boost
 from algorithms.KNN import KNN #k-nearest neighbors
 from algorithms.RandomForest import RandomForest
 
-path_data ='./preprocessed/prepared/drop/fill/'
+path_data ='./preprocessed/prepared/fill/'
 
 file_names = os.listdir(path_data)
 flag = False
@@ -38,9 +38,9 @@ y_test = y_test.to_numpy()
 print("train size:", X_train.shape)
 print("test size:", X_test.shape)
 
-# Decision_Tree(X_train, X_test, y_train, y_test)
-# SVM(X_train, X_test, y_train, y_test, kernel='rbf')
-# Extra_Trees(X_train, X_test, y_train, y_test)
-# Grad_Boost(X_train, X_test, y_train, y_test)
-# KNN(X_train, X_test, y_train, y_test)
+Decision_Tree(X_train, X_test, y_train, y_test)
+SVM(X_train, X_test, y_train, y_test, kernel='rbf')
+Extra_Trees(X_train, X_test, y_train, y_test)
+Grad_Boost(X_train, X_test, y_train, y_test)
+KNN(X_train, X_test, y_train, y_test)
 RandomForest(X_train, X_test, y_train, y_test)

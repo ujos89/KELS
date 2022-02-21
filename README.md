@@ -26,3 +26,19 @@
 - MLP (2 Layer)
 - LSTM
 - Transformer (ViT)
+
+## Code guide
+- Download source code from git
+```
+git clone https://github.com/ujos89/KELS.git
+cd KELS
+```
+- Add dataset
+./dataset/KELS2013_ ... (.sav files)
+
+- Data preprocessing & run code
+```
+python preprocessing.py
+python ml.py
+python mlp.py
+```
