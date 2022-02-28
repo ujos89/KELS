@@ -3,14 +3,14 @@ import os
 import numpy as np
 from utils.utils import get_savs, get_sav_label6, preprocessing
 
-# ### STEP1. convert sav file to csv files
-# os.makedirs('./preprocessed/raw' ,exist_ok=True)
-# os.makedirs('./preprocessed/preprocessed' ,exist_ok=True)
-# get_savs()
+### STEP1. convert sav file to csv files
+os.makedirs('./preprocessed/raw' ,exist_ok=True)
+os.makedirs('./preprocessed/preprocessed' ,exist_ok=True)
+get_savs()
 
-# ### STEP2. Merge columns, extract features
-# preprocessing()
-# get_sav_label6()
+### STEP2. Merge columns, extract features
+preprocessing()
+get_sav_label6()
 
 ### STEP3. Prepared dataset (Students arrangement)
 path_preprocessed = 'preprocessed/preprocessed/'
